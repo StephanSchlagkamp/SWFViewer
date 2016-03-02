@@ -5,7 +5,7 @@ public class WorkLoadProfile {
 	private String separator = " ";
 	private boolean strict = true;
 	
-	public static final String SKIP = "!s";
+	public static final String SKIP_FIELD = "!s";
 
 	public WorkLoadProfile(String... labels) {
 		if(labels != null) {

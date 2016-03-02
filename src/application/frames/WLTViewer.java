@@ -1,21 +1,24 @@
 package application.frames;
 
 import java.awt.Dimension;
+import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.text.LabelView;
 
 import application.factory.WorkLoadTraceFactory;
-import application.listener.FileChoosenListener;
-import application.model.WorkLoadProfile;
+import application.listener.FileSelectListener;
 import application.model.WorkLoadTrace;
+import application.model.swf.SWFWorkLoadProfile;
 
-public class WLTViewer extends JFrame  implements FileChoosenListener{
+public class WLTViewer extends JFrame  implements FileSelectListener{
 	private static final long serialVersionUID = 1L;
 
 	private static Dimension PLOT_FRAME_PADDING = new Dimension(64, 128);
@@ -23,20 +26,20 @@ public class WLTViewer extends JFrame  implements FileChoosenListener{
 	private FileDialog fileDialog;
 	private GraphPanel graphPanel;
 	
-	WorkLoadTrace trace = null;
+	private WorkLoadTrace trace;
 	
 	public WLTViewer(){
 		/* Getting display information */
-		Dimension d = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 
 		/* Setting frame size */
-		setBounds(PLOT_FRAME_PADDING.width, PLOT_FRAME_PADDING.height, d.width-2*PLOT_FRAME_PADDING.width, d.height-2*PLOT_FRAME_PADDING.height);
+		setBounds(PLOT_FRAME_PADDING.width, PLOT_FRAME_PADDING.height, screenSize.width-2*PLOT_FRAME_PADDING.width, screenSize.height-2*PLOT_FRAME_PADDING.height);
 
 		/* Constructing the open-file-frame */
 		fileDialog = new FileDialog().setFileListener(this);
 
 		graphPanel = new GraphPanel();
-		getContentPane().add(graphPanel);
+		add(graphPanel);
 		
 		/* Constructing the JMenuBar */
 		JMenuBar menuBar = new JMenuBar();
@@ -102,16 +105,22 @@ public class WLTViewer extends JFrame  implements FileChoosenListener{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		setVisible(true);
-		fileDialog.setVisible(false);
+		fileDialog.setVisible(true);
 	}
 
 	@Override
-	public void setFile(File file) {
+	public void setWorkLoadFile(final File file, final long start, final long end, final int threads) {
 		fileDialog.setVisible(false);
-		setVisible(true);
-		trace = WorkLoadTraceFactory.loadTraceFromFile(
-			new WorkLoadProfile("id", "tsubmit","twait","trun","allocated_proc","!s","!s","requested_proc").setOnlyDefinedFields(true), file);
-		graphPanel.setWorkloads(trace.getWorkloads("tsubmit",0,31692032));
+		this.setVisible(true);
+		
+		graphPanel.setVisible(false);
+		trace = WorkLoadTraceFactory.loadSWFTraceFromFile(file);
+		graphPanel.setWorkLoads(trace.getWorkloads(SWFWorkLoadProfile.SUBMIT_TIME, start, end));
+		graphPanel.setOffsetX(start);
+		graphPanel.setVirtualLengthX(end - start);
+		graphPanel.setLaneCount(threads);
+		graphPanel.build();
+		graphPanel.setVisible(true);
 	}
 	
 	@Override

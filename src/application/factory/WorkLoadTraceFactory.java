@@ -9,14 +9,21 @@ import java.util.ArrayList;
 import application.model.WorkLoad;
 import application.model.WorkLoadProfile;
 import application.model.WorkLoadTrace;
+import application.model.swf.SWFWorkLoadProfile;
 
 public class WorkLoadTraceFactory {
 	
 	private WorkLoadTraceFactory(){}
 	
-	public static WorkLoadTrace loadTraceFromFile(WorkLoadProfile profile, File file) {
-		return new WorkLoadTrace(profile, extractWorkLoads(loadLines(file),profile));
+	public static WorkLoadTrace loadSWFTraceFromFile(File file) {
+		SWFWorkLoadProfile profile = new SWFWorkLoadProfile();
+		return new WorkLoadTrace(new SWFWorkLoadProfile(), extractWorkLoads(profile, loadLines(file)));
 	}
+	
+	/*public static WorkLoadTrace loadOtherTraceFromFile(File file) {
+		OtherWorkLoadProfile profile = new OtherWorkLoadProfile();
+		return new WorkLoadTrace(new OtherWorkLoadProfile(), extractWorkLoads(profile, loadLines(file)));
+	}*/
 	
 	private static ArrayList<String> loadLines(File file) {
 		ArrayList<String> lines = new ArrayList<String>();
@@ -45,7 +52,7 @@ public class WorkLoadTraceFactory {
 		return lines;
 	}
 
-	private static ArrayList<WorkLoad> extractWorkLoads(ArrayList<String> lines, WorkLoadProfile profile) {
+	private static ArrayList<WorkLoad> extractWorkLoads(WorkLoadProfile profile, ArrayList<String> lines) {
 		ArrayList<WorkLoad> workLoads = new ArrayList<WorkLoad>(lines.size());
 		for (int i = 0, n = lines.size(); i < n; i++) {
 			workLoads.add(new WorkLoad(profile, lines.get(i)));
