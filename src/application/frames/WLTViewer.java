@@ -140,7 +140,7 @@ public class WLTViewer extends JFrame  implements FileSelectListener{
 		graphPanel.setTimeOffset(offset);
 		graphPanel.setVirtualLengthX(end - start);
 		graphPanel.setLaneCount(threads);
-		graphPanel.setWorkLoads(trace.getWorkloads(SWFWorkLoadProfile.SUBMIT_TIME, start, end));
+		graphPanel.setWorkLoads(trace.getWorkloads(start, end));
 		graphPanel.build();
 		graphPanel.setVisible(true);
 	}

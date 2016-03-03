@@ -20,7 +20,6 @@ import application.model.WorkLoadLaneEntry;
 import application.model.swf.SWFWorkLoadProfile;
 import application.model.WorkLoad;
 
-@SuppressWarnings("unused")
 public class GraphPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	

@@ -2,6 +2,8 @@ package application.model;
 
 import java.util.ArrayList;
 
+import application.model.swf.SWFWorkLoadProfile;
+
 public class WorkLoadTrace {
 	
 	private ArrayList<WorkLoad> workloads;
@@ -22,11 +24,11 @@ public class WorkLoadTrace {
 		return builder.toString();
 	}
 	
-	public ArrayList<WorkLoad> getWorkloads(String field,long min, long max) {
+	public ArrayList<WorkLoad> getWorkloads(long min, long max) {
 		ArrayList<WorkLoad> returnWorkLoads = new ArrayList<WorkLoad>();
 		for (int i = 0; i < workloads.size(); i++) {
 			WorkLoad tempWL = workloads.get(i);
-			long tempValue = Long.valueOf(tempWL.getEntry(field));
+			long tempValue = Long.valueOf(tempWL.getEntry(SWFWorkLoadProfile.SUBMIT_TIME))+Long.valueOf(tempWL.getEntry(SWFWorkLoadProfile.WAIT_TIME));
 			if(tempValue >= min && tempValue <= max) {
 				returnWorkLoads.add(tempWL);
 			}

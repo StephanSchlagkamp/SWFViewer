@@ -67,13 +67,13 @@ public class FileDialog extends JFrame {
 
 		final JTextField startInputField = new JTextField();
 		startInputField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
-		group0.add(new Label("Min. Submit Time:", Label.RIGHT));
+		group0.add(new Label("Min. Start Time:", Label.RIGHT));
 		group0.add(startInputField);
 
 		
 		final JTextField endInputField = new JTextField();
 		endInputField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
-		group0.add(new Label("Max. Submit Time:", Label.RIGHT));
+		group0.add(new Label("Max. Start Time:", Label.RIGHT));
 		group0.add(endInputField);
 
 		
