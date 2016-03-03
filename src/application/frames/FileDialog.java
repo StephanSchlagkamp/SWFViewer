@@ -57,7 +57,14 @@ public class FileDialog extends JFrame {
 		add(openButton);
 
 		
-		JPanel group0 = new JPanel(new GridLayout(1,6,2,4));
+		JPanel group0 = new JPanel(new GridLayout(1,8,2,4));
+
+		final JTextField dateOffsetField = new JTextField();
+		dateOffsetField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
+		group0.add(new Label("Log Time Offset:", Label.RIGHT));
+		group0.add(dateOffsetField);
+
+
 		final JTextField startInputField = new JTextField();
 		startInputField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
 		group0.add(new Label("Min. Submit Time:", Label.RIGHT));
@@ -87,6 +94,7 @@ public class FileDialog extends JFrame {
 					try {
 						listener.setWorkLoadFile(
 								selected,
+								Long.valueOf(dateOffsetField.getText()),
 								Long.valueOf(startInputField.getText()),
 								Long.valueOf(endInputField.getText()),
 								Integer.valueOf(coreInputField.getText()));

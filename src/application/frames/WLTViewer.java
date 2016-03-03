@@ -130,13 +130,14 @@ public class WLTViewer extends JFrame  implements FileSelectListener{
 	}
 
 	@Override
-	public void setWorkLoadFile(final File file, final long start, final long end, final int threads) {
+	public void setWorkLoadFile(final File file, final long offset, final long start, final long end, final int threads) {
 		fileDialog.setVisible(false);
 		this.setVisible(true);
 		
 		graphPanel.setVisible(false);
 		trace = WorkLoadTraceFactory.loadSWFTraceFromFile(file);
 		graphPanel.setOffsetX(start);
+		graphPanel.setTimeOffset(offset);
 		graphPanel.setVirtualLengthX(end - start);
 		graphPanel.setLaneCount(threads);
 		graphPanel.setWorkLoads(trace.getWorkloads(SWFWorkLoadProfile.SUBMIT_TIME, start, end));

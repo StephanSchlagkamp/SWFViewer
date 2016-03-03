@@ -31,10 +31,13 @@ public class GraphPanel extends JPanel {
 	
 	private long maxX,minX,MaxCores;
 	
+	private long timeOffset = 0;
+	
 	private ArrayList<WorkLoad> workloads;
 	private WorkLoadDistributor workloadDistributor;
 	
-	private Font font = new Font("Arial", Font.PLAIN, 16);
+	private Font font = new Font("Arial", Font.PLAIN, 10);
+	
 	
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -69,8 +72,8 @@ public class GraphPanel extends JPanel {
 				}
 			}
 			g2d.setFont(font);
-			g2d.setColor(Color.GREEN);
-			g2d.drawString("Beginning: "+new java.util.Date(1000*offsetX)+", End: "+new java.util.Date(1000*(offsetX+lengthX))+", "+laneCount+" Processors", 0, 16);
+			g2d.setColor(Color.BLACK);
+			g2d.drawString("Beginning: "+new java.util.Date(1000*(offsetX+timeOffset)).toGMTString()+",  End: "+new java.util.Date(1000*(offsetX+lengthX+timeOffset)).toGMTString()+",  "+laneCount+" Processors", 4, h-4);
 		} else {
 			System.out.println("Nothing to draw!");
 		}
@@ -118,5 +121,9 @@ public class GraphPanel extends JPanel {
 
 	public void setVirtualLengthX(long virtualX) {
 		this.lengthX = virtualX;
+	}
+
+	public void setTimeOffset(long timeOffset) {
+		this.timeOffset = timeOffset;
 	}
 }
