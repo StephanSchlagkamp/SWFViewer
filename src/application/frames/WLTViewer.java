@@ -73,11 +73,11 @@ public class WLTViewer extends JFrame  implements FileSelectListener{
 				fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
 				if (fileChooser.showSaveDialog(thisFrame) == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
-					if (!file.getName().endsWith(".png") || !file.getName().endsWith(".PNG")) {
+					if (!file.getAbsolutePath().endsWith(".png") || !file.getAbsolutePath().endsWith(".PNG")) {
 						file = new File(file.getAbsolutePath() + ".png");
 					}
 					try {
-						ImageIO.write(im, "png", fileChooser.getSelectedFile());
+						ImageIO.write(im, "PNG", file);
 						System.err.println("Exported Screenshot to: "+file.getAbsolutePath());
 					} catch (IOException e) {
 						e.printStackTrace();

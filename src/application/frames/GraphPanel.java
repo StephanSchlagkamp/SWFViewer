@@ -1,9 +1,15 @@
 package application.frames;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.Stroke;
+import java.awt.geom.AffineTransform;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -28,6 +34,8 @@ public class GraphPanel extends JPanel {
 	private ArrayList<WorkLoad> workloads;
 	private WorkLoadDistributor workloadDistributor;
 	
+	private Font font = new Font("Arial", Font.PLAIN, 16);
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -51,15 +59,18 @@ public class GraphPanel extends JPanel {
 				for (int j = 0; j < wlle_list.size(); j++) {
 					WorkLoadLaneEntry wlle = wlle_list.get(j);
 					g2d.setColor(wlle.getColor());
-					g2d.drawRect(
+					g2d.fillRect(
 							(int)((wlle.getBegin()-offsetX)*scaleX),
-							(int)(laneSpacing*(i+1)),
+							(int)(laneSpacing*(i-1)),
 							(int)((wlle.getEnd()-wlle.getBegin())*scaleX),
 							(int)Math.max(laneSpacing, 1f)
 					);
 					//System.out.println("WLLE: "+(int)((wlle.getBegin()-offsetX)*scaleX)+", "+(int)(laneSpacing*(i+1))+", "+(int)((wlle.getEnd()-wlle.getBegin())*scaleX)+", "+(int)Math.max(laneSpacing, 1f));
 				}
 			}
+			g2d.setFont(font);
+			g2d.setColor(Color.GREEN);
+			g2d.drawString("Beginning: "+new java.util.Date(1000*offsetX)+", End: "+new java.util.Date(1000*(offsetX+lengthX))+", "+laneCount+" Processors", 0, 16);
 		} else {
 			System.out.println("Nothing to draw!");
 		}

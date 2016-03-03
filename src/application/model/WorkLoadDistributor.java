@@ -57,7 +57,7 @@ public class WorkLoadDistributor {
 	
 	public int getMaxCoresUsed() {
 		for (int i = lanes.size()-1; i >= 0; i--) {
-			if(lanes.get(i).getEntries().size()>0){
+			if(!lanes.get(i).getEntries().isEmpty()){
 				return i+1;
 			}
 		}
