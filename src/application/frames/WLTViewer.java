@@ -18,7 +18,6 @@ import javax.swing.JMenuItem;
 import application.factory.WorkLoadTraceFactory;
 import application.listener.FileSelectListener;
 import application.model.WorkLoadTrace;
-import application.model.swf.SWFWorkLoadProfile;
 
 public class WLTViewer extends JFrame  implements FileSelectListener{
 	private static final long serialVersionUID = 1L;
@@ -31,7 +30,7 @@ public class WLTViewer extends JFrame  implements FileSelectListener{
 	private WorkLoadTrace trace;
 	
 	public WLTViewer(){
-		JFrame thisFrame = this;
+		final JFrame thisFrame = this;
 		
 		/* Getting display information */
 		Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();

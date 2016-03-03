@@ -28,8 +28,9 @@ public class WorkLoadTrace {
 		ArrayList<WorkLoad> returnWorkLoads = new ArrayList<WorkLoad>();
 		for (int i = 0; i < workloads.size(); i++) {
 			WorkLoad tempWL = workloads.get(i);
-			long tempValue = Long.valueOf(tempWL.getEntry(SWFWorkLoadProfile.SUBMIT_TIME))+Long.valueOf(tempWL.getEntry(SWFWorkLoadProfile.WAIT_TIME));
-			if(tempValue >= min && tempValue <= max) {
+			long runStart = Long.valueOf(tempWL.getEntry(SWFWorkLoadProfile.SUBMIT_TIME))+Long.valueOf(tempWL.getEntry(SWFWorkLoadProfile.WAIT_TIME));
+			long runEnd = runStart+Long.valueOf(tempWL.getEntry(SWFWorkLoadProfile.RUN_TIME));
+			if(runStart <= max && runStart >= min || runEnd <= max && runEnd >= min || runStart <= min && runEnd >= max) {
 				returnWorkLoads.add(tempWL);
 			}
 		}

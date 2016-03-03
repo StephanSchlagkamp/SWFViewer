@@ -4,22 +4,18 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.geom.AffineTransform;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JPanel;
 
+import application.model.WorkLoad;
 import application.model.WorkLoadDistributor;
 import application.model.WorkLoadLaneEntry;
 import application.model.swf.SWFWorkLoadProfile;
-import application.model.WorkLoad;
 
+@SuppressWarnings("unused")
 public class GraphPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
@@ -63,7 +59,7 @@ public class GraphPanel extends JPanel {
 					g2d.setColor(wlle.getColor());
 					g2d.fillRect(
 							(int)((wlle.getBegin()-offsetX)*scaleX),
-							(int)(laneSpacing*(i-1)),
+							(int)(laneSpacing*i-1f),
 							(int)((wlle.getEnd()-wlle.getBegin())*scaleX),
 							(int)Math.max(laneSpacing, 1f)
 					);
@@ -108,8 +104,8 @@ public class GraphPanel extends JPanel {
 					}
 				}
 			}
-			setOffsetX(workloadDistributor.getMinTime());
-			setVirtualLengthX(workloadDistributor.getMaxTime()-offsetX);
+			//setOffsetX(workloadDistributor.getMinTime());
+			//setVirtualLengthX(workloadDistributor.getMaxTime()-offsetX);
 			setLaneCount(workloadDistributor.getMaxCoresUsed());
 		}
 	}
