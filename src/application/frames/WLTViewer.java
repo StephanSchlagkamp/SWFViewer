@@ -1,17 +1,19 @@
 package application.frames;
 
+import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.text.LabelView;
 
 import application.factory.WorkLoadTraceFactory;
 import application.listener.FileSelectListener;
@@ -29,6 +31,8 @@ public class WLTViewer extends JFrame  implements FileSelectListener{
 	private WorkLoadTrace trace;
 	
 	public WLTViewer(){
+		JFrame thisFrame = this;
+		
 		/* Getting display information */
 		Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -62,6 +66,23 @@ public class WLTViewer extends JFrame  implements FileSelectListener{
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				System.err.println("Export Screenshot selected");
+				Container c = getContentPane();
+				BufferedImage im = new BufferedImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_ARGB);
+				c.paint(im.getGraphics());
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+				if (fileChooser.showSaveDialog(thisFrame) == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();
+					if (!file.getName().endsWith(".png") || !file.getName().endsWith(".PNG")) {
+						file = new File(file.getAbsolutePath() + ".png");
+					}
+					try {
+						ImageIO.write(im, "png", fileChooser.getSelectedFile());
+						System.err.println("Exported Screenshot to: "+file.getAbsolutePath());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		});
 
@@ -115,10 +136,10 @@ public class WLTViewer extends JFrame  implements FileSelectListener{
 		
 		graphPanel.setVisible(false);
 		trace = WorkLoadTraceFactory.loadSWFTraceFromFile(file);
-		graphPanel.setWorkLoads(trace.getWorkloads(SWFWorkLoadProfile.SUBMIT_TIME, start, end));
 		graphPanel.setOffsetX(start);
 		graphPanel.setVirtualLengthX(end - start);
 		graphPanel.setLaneCount(threads);
+		graphPanel.setWorkLoads(trace.getWorkloads(SWFWorkLoadProfile.SUBMIT_TIME, start, end));
 		graphPanel.build();
 		graphPanel.setVisible(true);
 	}

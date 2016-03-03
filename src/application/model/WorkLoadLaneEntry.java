@@ -43,10 +43,21 @@ public class WorkLoadLaneEntry {
 				||(cui.begin <= begin && cui.end >=end);//ist dieses intervall von cui eingeschlossen
 	}
 
-	static class CUIComparator implements Comparator<WorkLoadLaneEntry>{
+	public boolean isRightOf(WorkLoadLaneEntry cui) {
+		return begin >= cui.end;
+	}
+
+	static class CUIBeginComparator implements Comparator<WorkLoadLaneEntry>{
 		@Override
 		public int compare(WorkLoadLaneEntry o1, WorkLoadLaneEntry o2) {
 			return (int)(o1.begin-o2.begin);
+		}
+	}
+
+	static class CUIEndComparator implements Comparator<WorkLoadLaneEntry>{
+		@Override
+		public int compare(WorkLoadLaneEntry o1, WorkLoadLaneEntry o2) {
+			return (int)(o1.end-o2.end);
 		}
 	}
 }

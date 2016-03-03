@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JPanel;
 
@@ -21,6 +22,8 @@ public class GraphPanel extends JPanel {
 	private long lengthX = 0L;
 	private int laneCount = 0;
 	private float laneSpacing = 0;
+	
+	private long maxX,minX,MaxCores;
 	
 	private ArrayList<WorkLoad> workloads;
 	private WorkLoadDistributor workloadDistributor;
@@ -54,7 +57,7 @@ public class GraphPanel extends JPanel {
 							(int)((wlle.getEnd()-wlle.getBegin())*scaleX),
 							(int)Math.max(laneSpacing, 1f)
 					);
-					System.out.println("WLLE: "+(int)((wlle.getBegin()-offsetX)*scaleX)+", "+(int)(laneSpacing*(i+1))+", "+(int)((wlle.getEnd()-wlle.getBegin())*scaleX)+", "+(int)Math.max(laneSpacing, 1f));
+					//System.out.println("WLLE: "+(int)((wlle.getBegin()-offsetX)*scaleX)+", "+(int)(laneSpacing*(i+1))+", "+(int)((wlle.getEnd()-wlle.getBegin())*scaleX)+", "+(int)Math.max(laneSpacing, 1f));
 				}
 			}
 		} else {
@@ -67,21 +70,23 @@ public class GraphPanel extends JPanel {
 	}
 	
 	public void setLaneCount(int laneCount) {
-		workloadDistributor = new WorkLoadDistributor(this.laneCount = laneCount);
 		laneSpacing = (int)(((float)getHeight())/laneCount+0.5f);
+		this.laneCount = laneCount;
 	}
 	
 	public void build() {
+		Random r = new Random(System.nanoTime());
 		if(workloads != null) {
 			workloadDistributor = new WorkLoadDistributor(laneCount);
 			System.out.println("Building lanes for "+workloads.size()+" workloads");
 			for (int i = 0; i < workloads.size(); i++) {
 				WorkLoad load = workloads.get(i);
-				long startTime = Long.valueOf(load.getEntry(SWFWorkLoadProfile.SUBMIT_TIME));
-				long endTime = startTime+Long.valueOf(load.getEntry(SWFWorkLoadProfile.WAIT_TIME))+Long.valueOf(load.getEntry(SWFWorkLoadProfile.RUN_TIME));
+				long startTime = Long.valueOf(load.getEntry(SWFWorkLoadProfile.SUBMIT_TIME))+Long.valueOf(load.getEntry(SWFWorkLoadProfile.WAIT_TIME));
+				long endTime = startTime+Long.valueOf(load.getEntry(SWFWorkLoadProfile.RUN_TIME));
 				int coreCount = Integer.valueOf(load.getEntry(SWFWorkLoadProfile.ALLOCATED_PROCESSORS));
 				System.out.println("WLLE "+i+", start: "+startTime+", end: "+endTime+", cores: "+coreCount);
-				WorkLoadLaneEntry entry = new WorkLoadLaneEntry(load,startTime, endTime, coreCount,Color.getHSBColor(1f/i, 1f/i, 1f/i));
+				Color c = new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
+				WorkLoadLaneEntry entry = new WorkLoadLaneEntry(load,startTime, endTime, coreCount, c);
 				int rv = 0;
 				for (int j = 0; j < coreCount && rv != -1; j++) {
 					rv = workloadDistributor.addToschedule(entry);
@@ -90,6 +95,9 @@ public class GraphPanel extends JPanel {
 					}
 				}
 			}
+			setOffsetX(workloadDistributor.getMinTime());
+			setVirtualLengthX(workloadDistributor.getMaxTime()-offsetX);
+			setLaneCount(workloadDistributor.getMaxCoresUsed());
 		}
 	}
 
