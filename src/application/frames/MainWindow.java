@@ -19,7 +19,7 @@ import application.factory.WorkLoadTraceFactory;
 import application.listener.FileSelectListener;
 import application.model.WorkLoadTrace;
 
-public class WLTViewer extends JFrame  implements FileSelectListener{
+public class MainWindow extends JFrame  implements FileSelectListener{
 	private static final long serialVersionUID = 1L;
 
 	private static Dimension PLOT_FRAME_PADDING = new Dimension(64, 128);
@@ -29,7 +29,7 @@ public class WLTViewer extends JFrame  implements FileSelectListener{
 	
 	private WorkLoadTrace trace;
 	
-	public WLTViewer(){
+	public MainWindow(){
 		final JFrame thisFrame = this;
 		
 		/* Getting display information */

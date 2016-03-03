@@ -1,7 +1,7 @@
 package application;
 
 import javax.swing.UIManager;
-import application.frames.WLTViewer;
+import application.frames.MainWindow;
 
 public class MainApp {
 	
@@ -11,6 +11,6 @@ public class MainApp {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		new WLTViewer();
+		new MainWindow();
 	}
 }
