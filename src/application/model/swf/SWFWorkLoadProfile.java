@@ -2,6 +2,10 @@ package application.model.swf;
 
 import application.model.WorkLoadProfile;
 
+/**
+ * A {@link WorkLoadProfile} that can be used to interpret Standard Workload Files (.swf).
+ * <br>Definition: {@linkplain http://www.cs.huji.ac.il/labs/parallel/workload/swf.html}
+ */
 public class SWFWorkLoadProfile extends WorkLoadProfile {
 	
 	public static final String JOB_ID = "id";

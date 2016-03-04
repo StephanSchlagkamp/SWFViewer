@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -12,9 +13,16 @@ import javax.swing.JPanel;
 
 import application.model.WorkLoad;
 import application.model.WorkLoadDistributor;
+import application.model.WorkLoadLane;
 import application.model.WorkLoadLaneEntry;
+import application.model.WorkLoadTrace;
 import application.model.swf.SWFWorkLoadProfile;
 
+/**
+ * This {@linkplain JPanel} displays the {@linkplain WorkLoadTrace}.
+ * <br>Call setWorkloads(...) and the other setter-methods and and then build() to create a meaningful result.
+ * <p>The {@linkplain Font} Arial must be available!
+ */
 @SuppressWarnings("unused")
 public class GraphPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -34,6 +42,11 @@ public class GraphPanel extends JPanel {
 	private Font font = new Font("Arial", Font.PLAIN, 10);
 	
 	
+	/**
+	 * Paints the Graph and a little info field.
+	 * <br>DON'T call manually.
+	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -61,29 +74,73 @@ public class GraphPanel extends JPanel {
 							(int)((wlle.getBegin()-offsetX)*scaleX),
 							(int)(laneSpacing*i-1f),
 							(int)((wlle.getEnd()-wlle.getBegin())*scaleX),
-							(int)Math.max(laneSpacing, 1f)
+							(int)Math.max(laneSpacing+0.5f, 1f)
 					);
 					//System.out.println("WLLE: "+(int)((wlle.getBegin()-offsetX)*scaleX)+", "+(int)(laneSpacing*(i+1))+", "+(int)((wlle.getEnd()-wlle.getBegin())*scaleX)+", "+(int)Math.max(laneSpacing, 1f));
 				}
 			}
 			g2d.setFont(font);
 			g2d.setColor(Color.BLACK);
-			g2d.drawString("Beginning: "+new java.util.Date(1000*(offsetX+timeOffset)).toGMTString()+",  End: "+new java.util.Date(1000*(offsetX+lengthX+timeOffset)).toGMTString()+",  "+laneCount+" Processors", 4, h-4);
+			g2d.drawString("Beginning: "+new java.util.Date(1000*(offsetX+timeOffset)).toGMTString()+",  End: "+new java.util.Date(1000*(offsetX+lengthX+timeOffset)).toGMTString()+",  "+laneCount+" Resources used", 4, h-4);
 		} else {
 			System.out.println("Nothing to draw!");
 		}
 	}
 	
+	/**
+	 * Sets the {@linkplain WorkLoad}s to display
+	 * <p>Remember to call build to make changes active!
+	 * @param workloads The {@linkplain ArrayList} of {@linkplain WorkLoad}s to display.
+	 */
 	public void setWorkLoads(ArrayList<WorkLoad> workloads) {
 		this.workloads = workloads;
 	}
 	
+	/**
+	 * Sets the number of {@linkplain WorkLoadLane}s.
+	 * <p>Remember to call build to make changes active!
+	 * @param laneCount The number of lanes to create when build() is called.
+	 */
 	public void setLaneCount(int laneCount) {
 		laneSpacing = (int)(((float)getHeight())/laneCount+0.5f);
 		this.laneCount = laneCount;
 	}
+
+	/**
+	 * Sets the x-axis offset of the coordinate system.
+	 * <br>This DOESN'T use screen-coordinate-space, it uses trace-coordinate-space.
+	 * <p>Remember to call build to make changes active!
+	 * @param offsetX The offset that is used after build() has been called.
+	 */
+	public void setOffsetX(long offsetX) {
+		this.offsetX = offsetX;
+	}
+
+	/**
+	 * Sets the width of the visible coordinate system.
+	 * <br>This DOESN'T use screen-coordinate-space, it uses trace-coordinate-space.
+	 * <p>Remember to call build to make changes active!
+	 * @param virtualX The width of the displayed interval of the {@linkplain WorkLoadTrace}.
+	 */
+	public void setVirtualLengthX(long virtualX) {
+		this.lengthX = virtualX;
+	}
+
+	/**
+	 * Sets the time offset to use for displaying the little info field at the bottom of the {@linkplain GraphPanel}.
+	 * <br>This DOESN'T affect the displaying of the {@linkplain WorkLoadTrace}.
+	 * <p>Remember to call build to make changes active!
+	 * @param timeOffset The UNIX time offset.
+	 */
+	public void setTimeOffset(long timeOffset) {
+		this.timeOffset = timeOffset;
+	}
 	
+	/**
+	 * Uses the data that was set before to generate a visual representation of the {@linkplain WorkLoadTrace}
+	 */
 	public void build() {
+		setVisible(false);
 		Random r = new Random(System.nanoTime());
 		if(workloads != null) {
 			workloadDistributor = new WorkLoadDistributor(laneCount);
@@ -96,11 +153,10 @@ public class GraphPanel extends JPanel {
 				System.out.println("WLLE "+i+", start: "+startTime+", end: "+endTime+", cores: "+coreCount);
 				Color c = new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
 				WorkLoadLaneEntry entry = new WorkLoadLaneEntry(load,startTime, endTime, coreCount, c);
-				int rv = 0;
-				for (int j = 0; j < coreCount && rv != -1; j++) {
-					rv = workloadDistributor.addToschedule(entry);
-					if(rv == -1) {
+				for (int j = 0; j < coreCount; j++) {
+					if(workloadDistributor.addToschedule(entry) == -1) {
 						System.out.println("WLLE "+i+" didn't fit onto the lanes at iteration: "+j);
+						break;
 					}
 				}
 			}
@@ -108,17 +164,6 @@ public class GraphPanel extends JPanel {
 			//setVirtualLengthX(workloadDistributor.getMaxTime()-offsetX);
 			setLaneCount(workloadDistributor.getMaxCoresUsed());
 		}
-	}
-
-	public void setOffsetX(long offsetX) {
-		this.offsetX = offsetX;
-	}
-
-	public void setVirtualLengthX(long virtualX) {
-		this.lengthX = virtualX;
-	}
-
-	public void setTimeOffset(long timeOffset) {
-		this.timeOffset = timeOffset;
+		setVisible(true);
 	}
 }

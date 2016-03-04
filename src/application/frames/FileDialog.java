@@ -16,6 +16,10 @@ import javax.swing.filechooser.FileFilter;
 
 import application.listener.FileSelectListener;
 
+/**
+ *An Dialog that allows you to select a {@linkplain File} and set the Data needed to display a trace.
+ *Acts just like a normal {@linkplain JFrame} but modifying it is discouraged.
+ */
 public class FileDialog extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
@@ -59,27 +63,27 @@ public class FileDialog extends JFrame {
 		
 		JPanel group0 = new JPanel(new GridLayout(1,8,2,4));
 
-		final JTextField dateOffsetField = new JTextField();
+		final JTextField dateOffsetField = new JTextField("0");
 		dateOffsetField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
-		group0.add(new Label("Log Time Offset:", Label.RIGHT));
+		group0.add(new Label("Unix Start Time:", Label.RIGHT));
 		group0.add(dateOffsetField);
 
 
-		final JTextField startInputField = new JTextField();
+		final JTextField startInputField = new JTextField(""+Long.MIN_VALUE);
 		startInputField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
-		group0.add(new Label("Min. Start Time:", Label.RIGHT));
+		group0.add(new Label("Interval Begin:", Label.RIGHT));
 		group0.add(startInputField);
 
 		
-		final JTextField endInputField = new JTextField();
+		final JTextField endInputField = new JTextField(""+Long.MAX_VALUE);
 		endInputField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
-		group0.add(new Label("Max. Start Time:", Label.RIGHT));
+		group0.add(new Label("Interval End:", Label.RIGHT));
 		group0.add(endInputField);
 
 		
-		final JTextField coreInputField = new JTextField();
+		final JTextField coreInputField = new JTextField("100000");
 		coreInputField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
-		group0.add(new Label("Number of Cores:", Label.RIGHT));
+		group0.add(new Label("Max. Processors:", Label.RIGHT));
 		group0.add(coreInputField);
 		
 		add(group0);
@@ -126,11 +130,19 @@ public class FileDialog extends JFrame {
 		setLocationRelativeTo(null);
 	}
 	
+	/**
+	 * Sets the {@linkplain FileSelectListener} to notify when the user has chosen a {@linkplain File}.
+	 * @param listener The Listener to notify.
+	 * @return This {@linkplain FileDialog} for chaining.
+	 */
 	public FileDialog setFileListener(FileSelectListener listener){
 		this.listener = listener;
 		return this;
 	}
 	
+	/**
+	 * Clean up and Dispose.
+	 */
 	@Override
 	public void dispose() {
 		super.dispose();

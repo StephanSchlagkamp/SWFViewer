@@ -2,11 +2,19 @@ package application.model;
 
 import java.util.HashMap;
 
+/**
+ * Holds the data of a single workload in an associative manner.
+ */
 public class WorkLoad {
 	
 	private HashMap<String,String> data;
 	private WorkLoadProfile profile;
 
+	/**
+	 * Creates a new {@linkplain WorkLoad} object.
+	 * @param profile The {@linkplain WorkLoadProfile} to use.
+	 * @param traceLine A {@linkplain String} that contains a single data line of an workload-trace.
+	 */
 	public WorkLoad(WorkLoadProfile profile, String traceLine){
 		this.profile = profile;
 		String[] traceValues = null;
@@ -31,6 +39,11 @@ public class WorkLoad {
 		data.remove(WorkLoadProfile.SKIP_FIELD);
 	}
 	
+	/**
+	 * Returns the {@linkplain String} value saved under the passed key.
+	 * @param label The key.
+	 * @return The Value as a String. Convert it f.e. via Long.valueOf(...).
+	 */
 	public String getEntry(String label){
 		if(data != null)
 			return data.get(label);
@@ -38,6 +51,10 @@ public class WorkLoad {
 			return null;
 	}
 	
+	
+	/**
+	 * @return The {@linkplain WorkLoadProfile} used to create this {@linkplain WorkLoad}.
+	 */
 	public WorkLoadProfile getProfile() {
 		return profile;
 	}

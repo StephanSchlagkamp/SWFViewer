@@ -19,6 +19,11 @@ import application.factory.WorkLoadTraceFactory;
 import application.listener.FileSelectListener;
 import application.model.WorkLoadTrace;
 
+/**
+ * The {@linkplain MainWindow} acts as the Application {@linkplain JFrame} that manages the whole Application.
+ * <br>It manages its own {@linkplain GraphPanel} and {@linkplain FileDialog}.
+ * <p>Call setWorkLoadFile(...) to prepare and display a SWF {@linkplain WorkLoadTrace}.
+ */
 public class MainWindow extends JFrame  implements FileSelectListener{
 	private static final long serialVersionUID = 1L;
 
@@ -132,6 +137,7 @@ public class MainWindow extends JFrame  implements FileSelectListener{
 	public void setWorkLoadFile(final File file, final long offset, final long start, final long end, final int threads) {
 		fileDialog.setVisible(false);
 		this.setVisible(true);
+		this.toFront();
 		
 		graphPanel.setVisible(false);
 		trace = WorkLoadTraceFactory.loadSWFTraceFromFile(file);

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import application.model.swf.SWFWorkLoadProfile;
 
+/**
+ * Represents an workload-trace. Has a {@link WorkLoadProfile} and an {@link ArrayList} of {@link WorkLoad}s.
+ */
 public class WorkLoadTrace {
 	
 	private ArrayList<WorkLoad> workloads;
@@ -13,17 +16,12 @@ public class WorkLoadTrace {
 		this.profile = profile;
 		this.workloads = workLoads;
 	}
-	
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(profile.toString());
-		for (int i = 0; i < workloads.size(); i++) {
-			builder.append(System.lineSeparator()).append(workloads.get(i).toString());
-		}
-		return builder.toString();
-	}
-	
+
+	/**
+	 * @param min The time intervals beginning
+	 * @param max The time intervals ending
+	 * @return The {@link WorkLoad}s that are overlapping the specified interval.
+	 */
 	public ArrayList<WorkLoad> getWorkloads(long min, long max) {
 		ArrayList<WorkLoad> returnWorkLoads = new ArrayList<WorkLoad>();
 		for (int i = 0; i < workloads.size(); i++) {
@@ -37,11 +35,20 @@ public class WorkLoadTrace {
 		return returnWorkLoads;
 	}
 	
+	/**
+	 * @return An {@link ArrayList} of all {@link WorkLoad}s held by this {@link WorkLoadTrace}.
+	 */
 	public ArrayList<WorkLoad> getWorkloads(){
 		return workloads;
 	}
 	
-	public long getStartTime() {
-		return Long.valueOf(workloads.get(0).getEntry("tsubmit"));
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(profile.toString());
+		for (int i = 0; i < workloads.size(); i++) {
+			builder.append(System.lineSeparator()).append(workloads.get(i).toString());
+		}
+		return builder.toString();
 	}
 }
