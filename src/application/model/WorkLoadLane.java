@@ -10,33 +10,32 @@ import application.model.WorkLoadLaneEntry.CUIEndComparator;
 public class WorkLoadLane {
 	
 	private ArrayList<WorkLoadLaneEntry> intervals = new ArrayList<WorkLoadLaneEntry>();
-
+	private WorkLoadLaneEntry.CUIEndComparator comparator = new WorkLoadLaneEntry.CUIEndComparator();
 	
 	/**
 	 * @param cui The {@link WorkLoadLaneEntry} to check for overlapping with the already added {@link WorkLoadLaneEntry}s.
 	 * @return false if there was a conflict or if cui is null.
 	 */
-	public boolean isFitsOnLane(WorkLoadLaneEntry cui) {
-		if(cui == null) {
-			return false;
-		}
+	public int isFitsOnLane(WorkLoadLaneEntry cui) {
 		for (int i = intervals.size() - 1; i >= 0; i--) {
 			if(cui.isRightOf(intervals.get(i))) {
-				return true;
+				return (i == intervals.size()-1) ? 2 : 1;
 			} else if(intervals.get(i).isCollision(cui)) {
-				return false;
+				return 0;
 			}
 		}
-		return true;
+		
+		return 1;
 	}
 	
 	/**
 	 * Adds the passed {@link WorkLoadLaneEntry} to this {@link WorkLoadLane} and sorts with {@link CUIEndComparator}.
 	 * @param cui The {@link WorkLoadLaneEntry} to add to this {@link WorkLoadLane}.
 	 */
-	public void addLaneEntry(WorkLoadLaneEntry cui) {
+	public void addLaneEntry(WorkLoadLaneEntry cui, boolean sort) {
 		intervals.add(cui);
-		intervals.sort(new WorkLoadLaneEntry.CUIEndComparator());
+		if(sort)
+			intervals.sort(comparator);
 	}
 	
 	/**

@@ -12,7 +12,7 @@ import java.util.Random;
 import javax.swing.JPanel;
 
 import application.model.WorkLoad;
-import application.model.WorkLoadDistributor;
+import application.model.WorkLoadLaneDistributor;
 import application.model.WorkLoadLane;
 import application.model.WorkLoadLaneEntry;
 import application.model.WorkLoadTrace;
@@ -37,7 +37,7 @@ public class GraphPanel extends JPanel {
 	private long timeOffset = 0;
 	
 	private ArrayList<WorkLoad> workloads;
-	private WorkLoadDistributor workloadDistributor;
+	private WorkLoadLaneDistributor workloadDistributor;
 	
 	private Font font = new Font("Arial", Font.PLAIN, 10);
 	
@@ -143,7 +143,7 @@ public class GraphPanel extends JPanel {
 		setVisible(false);
 		Random r = new Random(System.nanoTime());
 		if(workloads != null) {
-			workloadDistributor = new WorkLoadDistributor(laneCount);
+			workloadDistributor = new WorkLoadLaneDistributor(laneCount);
 			System.out.println("Building lanes for "+workloads.size()+" workloads");
 			for (int i = 0; i < workloads.size(); i++) {
 				WorkLoad load = workloads.get(i);
@@ -154,10 +154,7 @@ public class GraphPanel extends JPanel {
 				Color c = new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
 				WorkLoadLaneEntry entry = new WorkLoadLaneEntry(load,startTime, endTime, coreCount, c);
 				for (int j = 0; j < coreCount; j++) {
-					if(workloadDistributor.addToschedule(entry) == -1) {
-						System.out.println("WLLE "+i+" didn't fit onto the lanes at iteration: "+j);
-						break;
-					}
+					workloadDistributor.addToschedule(entry);
 				}
 			}
 			//setOffsetX(workloadDistributor.getMinTime());
