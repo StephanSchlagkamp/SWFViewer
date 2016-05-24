@@ -5,7 +5,7 @@ package application.model;
  */
 public class WorkLoadProfile {
 	private String[] labels;
-	private String separator = " ";
+	private String separator = "\\s+";
 	private boolean strict = true;
 	
 	/**The label that tells the {@link WorkLoad} to skip a value.*/

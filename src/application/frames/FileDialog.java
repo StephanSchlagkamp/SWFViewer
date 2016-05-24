@@ -5,6 +5,7 @@ import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -63,19 +64,19 @@ public class FileDialog extends JFrame {
 		
 		JPanel group0 = new JPanel(new GridLayout(1,8,2,4));
 
-		final JTextField dateOffsetField = new JTextField("0");
+		final JTextField dateOffsetField = new JTextField(""+new Date().getTime()/1000L);
 		dateOffsetField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
 		group0.add(new Label("Unix Start Time:", Label.RIGHT));
 		group0.add(dateOffsetField);
 
 
-		final JTextField startInputField = new JTextField(""+Long.MIN_VALUE);
+		final JTextField startInputField = new JTextField("0");
 		startInputField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
 		group0.add(new Label("Interval Begin:", Label.RIGHT));
 		group0.add(startInputField);
 
 		
-		final JTextField endInputField = new JTextField(""+Long.MAX_VALUE);
+		final JTextField endInputField = new JTextField("1000000");
 		endInputField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
 		group0.add(new Label("Interval End:", Label.RIGHT));
 		group0.add(endInputField);
@@ -104,6 +105,7 @@ public class FileDialog extends JFrame {
 								Integer.valueOf(coreInputField.getText()));
 						frame.setVisible(false);
 					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
 						JOptionPane.showMessageDialog(frame, "Only numbers are permitted and all fields must be filled out!");
 					}
 				} else {

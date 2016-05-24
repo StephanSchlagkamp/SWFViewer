@@ -1,15 +1,10 @@
 package application.frames;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -35,8 +30,6 @@ public class MainWindow extends JFrame  implements FileSelectListener{
 	private WorkLoadTrace trace;
 	
 	public MainWindow(){
-		final JFrame thisFrame = this;
-		
 		/* Getting display information */
 		Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -64,31 +57,9 @@ public class MainWindow extends JFrame  implements FileSelectListener{
 			}
 		});
 
-		/* Constructing the JMenuItem for closing the application */
+		/* Constructing the JMenuItem for exporting a screenshot */
 		JMenuItem saveButton = new JMenuItem("Export Screenshot...");
-		saveButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				System.err.println("Export Screenshot selected");
-				Container c = getContentPane();
-				BufferedImage im = new BufferedImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_ARGB);
-				c.paint(im.getGraphics());
-				JFileChooser fileChooser = new JFileChooser();
-				fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-				if (fileChooser.showSaveDialog(thisFrame) == JFileChooser.APPROVE_OPTION) {
-					File file = fileChooser.getSelectedFile();
-					if (!file.getAbsolutePath().endsWith(".png") || !file.getAbsolutePath().endsWith(".PNG")) {
-						file = new File(file.getAbsolutePath() + ".png");
-					}
-					try {
-						ImageIO.write(im, "PNG", file);
-						System.err.println("Exported Screenshot to: "+file.getAbsolutePath());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
+		saveButton.addActionListener(new ScreenshotDialog(this));
 
 		/* Constructing the JMenuItem for closing the application */
 		JMenuItem exitButton = new JMenuItem("Exit");
@@ -101,10 +72,10 @@ public class MainWindow extends JFrame  implements FileSelectListener{
 		});
 
 		/* Constructing the JMenu for starting/stopping the simulation */
-		JMenu viewMenu = new JMenu("View");
+		JMenu viewMenu = new JMenu("View"); // TODO add view menu
 
 		/* Constructing the JMenuItem for setting scope properties */
-		JMenuItem changeViewButton = new JMenuItem("View Settings");
+		JMenuItem changeViewButton = new JMenuItem("View Settings"); // TODO add view menu
 		changeViewButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -118,11 +89,11 @@ public class MainWindow extends JFrame  implements FileSelectListener{
 		fileMenu.add(exitButton);
 
 		/* Constructing the view menu */
-		viewMenu.add(changeViewButton);
+		//viewMenu.add(changeViewButton); // TODO add view menu
 
 		/* Constructing the menu bar */
 		menuBar.add(fileMenu);
-		menuBar.add(viewMenu);
+		//menuBar.add(viewMenu); // TODO add view menu
 
 		/* Adding the menu bar to the main frame*/
 		setJMenuBar(menuBar);
@@ -130,7 +101,7 @@ public class MainWindow extends JFrame  implements FileSelectListener{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		setVisible(true);
-		fileDialog.setVisible(true);
+		fileDialog.setVisible(false);
 	}
 
 	@Override
