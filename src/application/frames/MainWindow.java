@@ -72,7 +72,7 @@ public class MainWindow extends JFrame  implements FileSelectListener{
 		});
 
 		/* Constructing the JMenu for starting/stopping the simulation */
-		JMenu viewMenu = new JMenu("View"); // TODO add view menu
+		//JMenu viewMenu = new JMenu("View"); // TODO add view menu
 
 		/* Constructing the JMenuItem for setting scope properties */
 		JMenuItem changeViewButton = new JMenuItem("View Settings"); // TODO add view menu
