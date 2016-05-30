@@ -18,6 +18,7 @@ public class MainApp {
 			e.printStackTrace();
 		}
 		MainWindow window = new MainWindow();
+		window.setSize(1280, 768);
 		
 		if(args.length > 0) {
 			File file = null;
@@ -66,7 +67,7 @@ public class MainApp {
 					break;
 				}
 			}
-			if(file != null && file.exists() &! file.isDirectory())
+			if(file != null && file.exists() && !file.isDirectory())
 				window.setWorkLoadFile(file, offset, start, end, threads);
 			else 
 				System.err.println("File: " + file + "is invalid!");
