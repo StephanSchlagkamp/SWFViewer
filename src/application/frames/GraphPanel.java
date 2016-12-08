@@ -151,7 +151,8 @@ public class GraphPanel extends JPanel {
 				long endTime = startTime+Long.valueOf(load.getEntry(SWFWorkLoadProfile.RUN_TIME));
 				int coreCount = Integer.valueOf(load.getEntry(SWFWorkLoadProfile.ALLOCATED_PROCESSORS));
 				System.out.println("WLLE "+i+", start: "+startTime+", end: "+endTime+", cores: "+coreCount);
-				Color c = new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
+				
+				Color c = getRandomColor(Long.valueOf(workloads.get(i).getEntry(SWFWorkLoadProfile.JOB_ID)));
 				WorkLoadLaneEntry entry = new WorkLoadLaneEntry(load,startTime, endTime, coreCount, c);
 				for (int j = 0; j < coreCount; j++) {
 					workloadDistributor.addToschedule(entry);
@@ -163,4 +164,15 @@ public class GraphPanel extends JPanel {
 		}
 		setVisible(true);
 	}
+	
+	public static Color getRandomColor(long id) {
+		final double golden_ratio_conjugate = 0.618033988749895;
+		
+		double h = 0;
+		for(long i = 0; i < id;i++) {
+			h += golden_ratio_conjugate;
+			h %= 1d;
+		}
+		return new Color(Color.HSBtoRGB((float)h, 0.5f, 0.95f));
+    }
 }
